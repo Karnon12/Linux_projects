@@ -1,0 +1,30 @@
+import subprocess
+import os
+import time
+
+My_file = "myfile"
+meshes_directory = "meshes/meshC_voro/vmesh_{}.'format of your file'"
+
+# Modifier le chemin du maillage dans le fichier
+with open(My_file, "r") as f:
+    content = f.read()
+
+for mesh in range(1, 6):
+    mesh_path = meshes_directory.format(mesh)
+    vmesh_path = "vmesh_{}.format".format(mesh)
+
+    modified_content = content.replace("<file internal-partition='true'>meshes/meshC_voro/.'format'</file>",
+                                       "<file internal-partition='true'>{}</file>".format(mesh_path))
+
+    with open(arcane_file, "w") as f:
+        f.write(modified_content)
+
+    # Lancer le calcul en utilisant la commande dans le terminal
+    command = ["../../../buildRelease/bin/Yourfile.exe", My_file]
+    
+    # Définir la variable d'environnement pour le maillage et lancer le calcul dans le même processus
+    combined_command = "export ARCANE_ITEM_TYPE_FILE={} && {}".format(vmesh_path, " ".join(command))
+    subprocess.run(combined_command, shell=True, executable="/bin/bash")
+
+    # Attendre que le calcul soit terminé avant de passer au maillage suivant
+    #time.sleep(10)  # Attendre 10 secondes (ajuster si nécessaire)
